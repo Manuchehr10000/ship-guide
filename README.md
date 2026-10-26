@@ -26,11 +26,11 @@ The rules that hold it together:
 Per person and per machine. Done once; item 8 says what to repeat after a kit change.
 
 1. **Claude.** Install the Claude desktop app and sign in with a plan that includes Claude Code. The Code tab is your workshop. Terminal and VS Code are advanced routes; you don't need them.
-2. **GitHub.** An account. The kit repo is private: ask its owner for access.
+2. **GitHub.** An account. The kit repo is private: ask its owner to add you to the mgac-consulting organization (Read is enough).
 3. **Notion.** A workspace where you can add teamspaces. In your Claude account, turn the Notion connector on; the Code tab uses it when you sign in with the same account.
 4. **On the machine.** git and python3; Node.js if your projects have a frontend. Git access to GitHub from the Code tab: `gh auth login`, then `gh auth setup-git`, or an SSH key. Ask Claude in the Code tab to walk you through it.
-5. **The chat skill.** Get the `ship-spec` zip from the kit's owner, or zip the kit's [`chat/ship-spec`](https://github.com/Manuchehr10000/ship-kit/blob/main/chat/ship-spec) folder yourself (both files). Upload it as a skill in your Claude account. Its Version line tells chat which version is installed. Repeat after each kit change.
-6. **The plugin.** In the Code tab run `/plugin marketplace add Manuchehr10000/ship-kit`, then `/plugin install ship@ship-kit`. The desktop app's Code tab installs plugins the same way from the `+` menu. Plugins don't load in cloud sessions.
+5. **The chat skill.** Get the `ship-spec` zip from the kit's owner, or zip the kit's [`chat/ship-spec`](https://github.com/mgac-consulting/ship-kit/blob/main/chat/ship-spec) folder yourself (both files). Upload it as a skill in your Claude account. Its Version line tells chat which version is installed. Repeat after each kit change.
+6. **The plugin.** In the Code tab run `/plugin marketplace add mgac-consulting/ship-kit`, then `/plugin install ship@ship-kit`. The desktop app's Code tab installs plugins the same way from the `+` menu. Plugins don't load in cloud sessions.
 7. **Check.** In a new chat, "what can ship-spec do?" gets an answer. In the Code tab, `/ship:setup` is in the command list.
 8. **After a kit change.** The kit's README says what changed. If `chat/` changed, repeat item 5. If `plugins/` changed: in the Code tab, `/plugin marketplace update ship-kit`, then in `/plugin` open Installed → ship → Update now, then `/reload-plugins`; then run `/ship:setup` again in each project and commit what it rewrote.
 
@@ -56,7 +56,7 @@ Per person and per machine. Done once; item 8 says what to repeat after a kit ch
 4. It builds the page at the teamspace's root, fetches it back and checks that every part is there. You get the link.
 5. Its last line sends you to `/ship:setup`. Spec nothing yet: set the repo up first (step 5) and pass the checklist (step 6).
 
-The page, top to bottom. The exact lines, columns and views are in [chat/ship-spec/page-layout.md](https://github.com/Manuchehr10000/ship-kit/blob/main/chat/ship-spec/page-layout.md); this guide never copies them.
+The page, top to bottom. The exact lines, columns and views are in [chat/ship-spec/page-layout.md](https://github.com/mgac-consulting/ship-kit/blob/main/chat/ship-spec/page-layout.md); this guide never copies them.
 
 | Part | What it holds | Who writes it |
 | --- | --- | --- |
@@ -186,6 +186,6 @@ For a deep talk, the old roles are still there as chat skills: "Summon PM", "Sum
 ## Where things live
 
 - This guide: `guide/` in the kit repo. English in [README.md](README.md), Russian in [README.ru.md](README.ru.md). It changes on a branch with the kit, and its header names the kit versions it describes.
-- The kit: [Manuchehr10000/ship-kit](https://github.com/Manuchehr10000/ship-kit). Install and reference: the [kit README](https://github.com/Manuchehr10000/ship-kit/blob/main/README.md). The kit repo is private: ask its owner for access.
+- The kit: [mgac-consulting/ship-kit](https://github.com/mgac-consulting/ship-kit). Install and reference: the [kit README](https://github.com/mgac-consulting/ship-kit/blob/main/README.md). The kit repo is private: ask its owner to add you to the mgac-consulting organization (Read is enough).
 - Each project: its own Notion teamspace and its own GitHub repo. Its rules: the `CLAUDE.md` in that repo. No Notion copies.
 - The old Scout guide was retired on 19 Oct 2026 and is archived in Notion, for history only.
