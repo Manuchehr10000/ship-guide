@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.3 — 26 Oct 2026.** For ship-spec 0.4.1 and the ship plugin 0.3.2. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.4 — 1 Nov 2026.** For ship-spec 0.4.2 and the mg-ship-kit plugin 0.4.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -26,13 +26,13 @@ The rules that hold it together:
 Per person and per machine. Done once; item 8 says what to repeat after a kit change.
 
 1. **Claude.** Install the Claude desktop app and sign in with a plan that includes Claude Code. The Code tab is your workshop. Terminal and VS Code are advanced routes; you don't need them.
-2. **GitHub.** An account. The kit repo is private: ask its owner to add you to the mgac-consulting organization (Read is enough).
+2. **GitHub.** An account. The kit repo is private: ask its owner to add you to the mgac-consulting organization (Read is enough). For Ship to work in cloud sessions, the organization's owner also installs Claude's GitHub app on mgac-consulting with access to ship-kit: once per organization, not per person.
 3. **Notion.** A workspace where you can add teamspaces. In your Claude account, turn the Notion connector on; the Code tab uses it when you sign in with the same account.
 4. **On the machine.** git and python3; Node.js if your projects have a frontend. Git access to GitHub from the Code tab: `gh auth login`, then `gh auth setup-git`, or an SSH key. Ask Claude in the Code tab to walk you through it.
 5. **The chat skill.** Get the `ship-spec` zip from the kit's owner, or zip the kit's [`chat/ship-spec`](https://github.com/mgac-consulting/ship-kit/blob/main/chat/ship-spec) folder yourself (both files). Upload it as a skill in your Claude account. Its Version line tells chat which version is installed. Repeat after each kit change.
-6. **The plugin.** In the Code tab run `/plugin marketplace add mgac-consulting/ship-kit`, then `/plugin install ship@ship-kit`. The desktop app's Code tab installs plugins the same way from the `+` menu. Plugins don't load in cloud sessions.
-7. **Check.** In a new chat, "what can ship-spec do?" gets an answer. In the Code tab, `/ship:setup` is in the command list.
-8. **After a kit change.** The kit's README says what changed. If `chat/` changed, repeat item 5. If `plugins/` changed: in the Code tab, `/plugin marketplace update ship-kit`, then in `/plugin` open Installed → ship → Update now, then `/reload-plugins`; then run `/ship:setup` again in each project and commit what it rewrote.
+6. **The plugin.** In the Code tab run `/plugin marketplace add mgac-consulting/ship-kit`, then `/plugin install mg-ship-kit@ship-kit`. The desktop app's Code tab installs plugins the same way from the `+` menu. This install is for your machine only: cloud sessions can't see it. They load the plugin from the project's repo once `/mg-ship-kit:setup` has run there (step 5).
+7. **Check.** In a new chat, "what can ship-spec do?" gets an answer. In the Code tab, `/mg-ship-kit:setup` is in the command list.
+8. **After a kit change.** The kit's README says what changed. If `chat/` changed, repeat item 5. If `plugins/` changed: in the Code tab, `/plugin marketplace update ship-kit`, then in `/plugin` open Installed → mg-ship-kit → Update now, then `/reload-plugins`; then run `/mg-ship-kit:setup` again in each project and commit what it rewrote. **Once, for 0.4.0:** the plugin was renamed from `ship` to `mg-ship-kit`, so an update doesn't carry it over. Run `/plugin uninstall ship@ship-kit`, then `/plugin install mg-ship-kit@ship-kit`, then `/reload-plugins`. In each project, run `/mg-ship-kit:setup` and change any `/ship:` command in its `CLAUDE.md` to `/mg-ship-kit:`; setup warns until you do.
 
 ## 2. Notion: the project's teamspace
 
@@ -54,7 +54,7 @@ Per person and per machine. Done once; item 8 says what to repeat after a kit ch
 2. It lists your teamspaces and asks for what's missing: the project name, one line on what it does, how it's sold (one client, several clients, or a public app), each client with a contact, the repo link, and where secrets are kept. A line each. "Not yet" is fine for the rest.
 3. It picks the track: where the project runs, and on what stack. It asks up to four plain questions (a bank, telecom or government client? a devops on your team? mostly data work, or pages and forms? a card for $5 a month or more?) and names the track with its reason: devops, railway or cloudflare. You're never asked which stack. If you want another track and can say why, say so: your track and your reason go on the Track line. A bank, telecom or government client with no devops stops here: find a devops first.
 4. It builds the page at the teamspace's root, fetches it back and checks that every part is there. You get the link.
-5. Its last line sends you to `/ship:setup`. Spec nothing yet: set the repo up first (step 5) and pass the checklist (step 6).
+5. Its last line sends you to `/mg-ship-kit:setup`. Spec nothing yet: set the repo up first (step 5) and pass the checklist (step 6).
 
 The page, top to bottom. The exact lines, columns and views are in [chat/ship-spec/page-layout.md](https://github.com/mgac-consulting/ship-kit/blob/main/chat/ship-spec/page-layout.md); this guide never copies them.
 
@@ -70,16 +70,17 @@ Rules for the whole page: no password, key or server login anywhere on it. Views
 
 ## 5. Code: set the repo up
 
-1. In the Code tab, in the repo folder, run `/ship:setup`. It asks for the project page link first. Paste it. It reads the track from the Facts. On the cloudflare track it stops here and writes nothing: that track isn't built yet.
+1. On your machine, in the Code tab, in the repo folder, run `/mg-ship-kit:setup`. The first setup can't run in a cloud session: the plugin isn't there yet. It asks for the project page link first. Paste it. It reads the track from the Facts. On the cloudflare track it stops here and writes nothing: that track isn't built yet.
 2. It finds the backend and frontend folders and writes `ship.json` with the stack list, read from the dependency files. In an empty repo it starts from the kit's default stack (FastAPI, Postgres, React, in `backend/` and `frontend/`), which is the stack of the devops and railway tracks. If your Track line names another stack, say so now; it then starts with an empty list and the right folders.
 3. It reads the stack list back: "n Python packages, n Node packages". From now on anything new stops a piece until you approve it in one line.
 4. It creates `contracts/` and a `CLAUDE.md` from the kit's template. Fill the placeholders with Claude from what the code shows; keep every rule line and add none. Rules and stack only, no code, under 150 lines. A `CLAUDE.md` that already exists is left alone; Claude says in one line what the template has that it lacks.
 5. It links the tracker on the page you pasted and says "linked the tracker".
-6. It names each tool the check needs, `vulture` for a backend and `knip` for a frontend, as found, MISSING with its install line, or "needed once backend/ exists" in an empty repo. Install a MISSING one now; install a "needed once" one as soon as the first piece makes that folder, before `/ship:cto-check`. The check fails closed without them. If it warns that git tracks an env file, take the file out of git as it says and change any password the file held.
-7. It writes the GitHub check into `.github/`. From now on GitHub runs the same check on every push to dev and main, and nothing deploys unless it passes. Don't edit those files; after a plugin update, run `/ship:setup` again to refresh them. It also adds env files to `.gitignore`, and from then on any push that carries one is refused.
-8. Commit the files it added or changed and push them to dev. The push carries no product code, so the gate lets it through. Then open the repo's Actions tab on GitHub: within a few minutes the Ship check on that push turns green. Red or missing: stop and fix it. Every deploy waits for it. The kit's own tests fake GitHub, so your project's first push is the workflow's real test; if it's red, read the run's log before anything else.
-9. Connect the deploy. Setup ends with one line for your track; the details are in `.github/ship/README.md` in your repo. Track devops: give your devops that file (section "Your devops"); their deploy starts only after the Ship check passes. Track railway: follow its section "Railway", and ask Claude to walk you through it.
-10. When the dev link opens, write it on the Facts' Dev URL line. You don't have to wait for it: spec and build while the deploy is being set up. A piece that reaches dev first waits there for the link and its verdict. The Live URL comes with the first release (step 8).
+6. It names each tool the check needs, `vulture` for a backend and `knip` for a frontend, as found, MISSING with its install line, or "needed once backend/ exists" in an empty repo. Install a MISSING one now; install a "needed once" one as soon as the first piece makes that folder, before `/mg-ship-kit:cto-check`. The check fails closed without them. If it warns that git tracks an env file, take the file out of git as it says and change any password the file held.
+7. It writes the GitHub check into `.github/`. From now on GitHub runs the same check on every push to dev and main, and nothing deploys unless it passes. Don't edit those files; after a plugin update, run `/mg-ship-kit:setup` again to refresh them. It also adds env files to `.gitignore`, and from then on any push that carries one is refused.
+8. It writes the plugin into `.claude/settings.json`, keeping anything else in that file. Once the file is on dev, a cloud session on this repo has Ship's commands with no install, as long as Claude's GitHub app can reach the kit repo (step 1, item 2).
+9. Commit the files it added or changed and push them to dev. The push carries no product code, so the gate lets it through. Then open the repo's Actions tab on GitHub: within a few minutes the Ship check on that push turns green. Red or missing: stop and fix it. Every deploy waits for it. The kit's own tests fake GitHub, so your project's first push is the workflow's real test; if it's red, read the run's log before anything else.
+10. Connect the deploy. Setup ends with one line for your track; the details are in `.github/ship/README.md` in your repo. Track devops: give your devops that file (section "Your devops"); their deploy starts only after the Ship check passes. Track railway: follow its section "Railway", and ask Claude to walk you through it.
+11. When the dev link opens, write it on the Facts' Dev URL line. You don't have to wait for it: spec and build while the deploy is being set up. A piece that reaches dev first waits there for the link and its verdict. The Live URL comes with the first release (step 8).
 
 ## 6. Setup checklist: nothing is specced or built until every box is ticked
 
@@ -96,7 +97,7 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 
 - [ ] A private repo with `main` and `dev`, and you can push to both from the Code tab.
 - [ ] The env file is in `.gitignore` and was never committed.
-- [ ] `ship.json`, `contracts/`, `CLAUDE.md`, `.gitignore` and `.github/` are committed and pushed to dev.
+- [ ] `ship.json`, `contracts/`, `CLAUDE.md`, `.gitignore`, `.claude/settings.json` and `.github/` are committed and pushed to dev.
 - [ ] GitHub's Actions tab shows a green Ship check on that push.
 - [ ] `CLAUDE.md` is filled, under 150 lines, rules and stack only.
 - [ ] The stack list was read back to you and matches what you plan to use.
@@ -106,7 +107,8 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 **Claude**
 
 - [ ] ship-spec is installed and its Version line matches the kit. Chat says so when asked.
-- [ ] The ship plugin is installed in the Code tab and `/ship:next` is in the command list.
+- [ ] The mg-ship-kit plugin is installed in the Code tab and `/mg-ship-kit:next` is in the command list.
+- [ ] A cloud session on the repo's dev branch also shows `/mg-ship-kit:next`.
 - [ ] The Notion connector is on, and the Code tab can open the project page.
 
 ## 7. Build a piece
@@ -125,13 +127,13 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 
 **Pick up and build (Code tab)**
 
-- Run `/ship:next`. It takes the lowest-Order Ready piece, saves the contract to `contracts/`, marks the row Building and writes a read-only copy into the row. Only Claude Code writes that copy; a hand edit stops it.
+- Run `/mg-ship-kit:next`. It takes the lowest-Order Ready piece, saves the contract to `contracts/`, marks the row Building and writes a read-only copy into the row. Only Claude Code writes that copy; a hand edit stops it.
 - Claude builds what the contract lists and nothing more. You read the one screen, not the plan.
 - A change the client asks for mid-build is a contract change: you approve it in one line. Claude never edits a contract on its own.
 
 **Check (Code tab)**
 
-- Run `/ship:cto-check`. Three checks: Size (what got built against the list), Stack (a package or import outside the list), Leftovers (unused code on the lines the piece added, found by vulture and knip). A failed check stops the piece.
+- Run `/mg-ship-kit:cto-check`. Three checks: Size (what got built against the list), Stack (a package or import outside the list), Leftovers (unused code on the lines the piece added, found by vulture and knip). A failed check stops the piece.
 - The way out. An extra the client asked for: you approve a contract change in one line. An extra nobody asked for: Claude deletes it. A new package: you approve it in one line, or Claude removes it. Leftovers: Claude deletes them. Then the check runs again.
 - On a pass, Claude may propose a line or two for `CLAUDE.md` from what the piece taught. Approve in one line or decline.
 
@@ -139,26 +141,26 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 
 - Say "push". The gate runs the check again and refuses uncommitted changes; GitHub runs it once more before anything deploys. The row moves to On dev.
 - Ask the client to test on the Dev URL against the "How to check it" lines.
-- Start the next piece now with `/ship:next`. Pieces on dev don't block the next one.
+- Start the next piece now with `/mg-ship-kit:next`. Pieces on dev don't block the next one.
 
 **The verdict (Code tab)**
 
-- Accepted: `/ship:done`. The row becomes Done.
-- Rejected: `/ship:drop`. The code is deleted and the row becomes Dropped. Git keeps it.
+- Accepted: `/mg-ship-kit:done`. The row becomes Done.
+- Rejected: `/mg-ship-kit:drop`. The code is deleted and the row becomes Dropped. Git keeps it.
 - Nearly right: for now, leave it on dev, file the change as a new request, spec and build the fix; the client then tests both. Whether a reopen joins the kit is decided after the first run.
 
 | Command | Where | What it does |
 | --- | --- | --- |
 | "start a project", "file the meeting", "add an idea", "spec a piece", "status" | chat | the ship-spec skill |
-| `/ship:setup` | Code tab | once per project, and again after a plugin update |
-| `/ship:next` | Code tab | pick up the next Ready piece |
-| `/ship:cto-check` | Code tab | run the check, walk the way out, push to dev |
-| `/ship:done` | Code tab | the client accepted it |
-| `/ship:drop` | Code tab | the client rejected it: delete the code |
+| `/mg-ship-kit:setup` | Code tab | once per project, and again after a plugin update |
+| `/mg-ship-kit:next` | Code tab | pick up the next Ready piece |
+| `/mg-ship-kit:cto-check` | Code tab | run the check, walk the way out, push to dev |
+| `/mg-ship-kit:done` | Code tab | the client accepted it |
+| `/mg-ship-kit:drop` | Code tab | the client rejected it: delete the code |
 
 ## 8. Release to main
 
-- Release is open when no piece is Building or On dev, so every piece has a verdict. `/ship:done` tells you when it opens.
+- Release is open when no piece is Building or On dev, so every piece has a verdict. `/mg-ship-kit:done` tells you when it opens.
 - Push dev to main. The gate blocks a release while a piece is building or on dev, and ships only what is already on dev.
 - By hand before every release, until the kit covers it: dev and live use separate databases; a backup runs before every migration; automatic daily backups are kept off the server and the latest is under a day old; a restore was tested at least once; rollback is one command and was rehearsed; no secret is in the repo; an alert fires when live goes down. The release note opens with the count, for example "Floor: 7/7". Nothing ships while one fails. Fix it first.
 - Who touches a server. Your own server: you and Claude. A client's cloud server: only after practice runs on your own, in plan mode, every command approved. A bank, telecom or government server: a real devops sets it up and holds access; you build and support. Code reaches live only through the pipeline, never by hand over SSH. Claude never works on a live server in auto mode.
