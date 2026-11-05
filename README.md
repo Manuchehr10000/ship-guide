@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.4 — 1 Nov 2026.** For ship-spec 0.4.2 and the mg-ship-kit plugin 0.4.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.5 — 4 Nov 2026.** For ship-spec 0.5.0 and the mg-ship-kit plugin 0.5.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -123,7 +123,7 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 
 - Say "spec a piece". Chat shows the New requests; you pick one or more. It drafts the contract on one screen: the words it comes from, what users see, what's out, how to check it ("When I …, then I see …"), and the size as counts of screens, endpoints and tables.
 - Read it. Approve in one line, or say what to change. On approval the piece gets a Tracker row as Ready, and its requests become Specced and link to it.
-- If one client test can't cover it, split it. Pieces build one at a time.
+- If one client test can't cover it, split it into pieces, or spec it as a chain (below) to have Claude Code build the parts in one run. Pieces build one at a time.
 
 **Pick up and build (Code tab)**
 
@@ -149,18 +149,32 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 - Rejected: `/mg-ship-kit:drop`. The code is deleted and the row becomes Dropped. Git keeps it.
 - Nearly right: for now, leave it on dev, file the change as a new request, spec and build the fix; the client then tests both. Whether a reopen joins the kit is decided after the first run.
 
+**A chain: one big feature built in one run**
+
+Some features are one thing to the client and five pieces to build: a list page, a detail page, two endpoints and a table. Piece by piece, that is five specs, five pushes and five rounds of waiting. A chain does it in one run and keeps a reader where it matters.
+
+- **Spec (chat).** Say "spec a chain". The contract is the head: the whole feature's "What users see", the client's test of the whole feature, and a Size that names everything it adds, every item with its full path or name. You approve it in one line, as always. It lands in the tracker as Ready, marked as a chain head.
+- **Split (Code tab).** Run `/mg-ship-kit:chain`. Claude picks the head up and splits it into sub-pieces: two to six contracts of its own, foundations first, each naming only what the head names, every head item in exactly one sub-piece, each count equal to its names. The kit refuses any other split, and refuses a head that doesn't name what it counts. Each sub-piece gets a tracker row under the head (the Head column). Then Claude stops and shows you the split on one screen.
+- **Go.** Read the sub-pieces, here or in the tracker. Say "go". That is the one stop: after it Claude builds the sub-pieces in order, each through the same check and push as a piece. Before each next sub-piece the kit itself asks GitHub whether the check is green on dev (through `gh`, so `gh auth login` once); not green, or no answer, and the chain halts, however it was resumed.
+- **Halts.** The chain stops itself for three reasons only: a check fails for something that needs your word (an extra, a new package); GitHub's check goes red, or can't be asked; a sub-contract leaves a question open (two ways to build it, or something it needs that it doesn't name — Claude never edits a contract to answer its own question). You answer or walk the way out with `/mg-ship-kit:cto-check`, then `/mg-ship-kit:chain` continues from where it stopped. What was built stays where it is.
+- **The verdict.** When the last sub-piece lands, the head moves to On dev. The client tests the whole feature against the head's "How to check it" lines and gives one verdict: `/mg-ship-kit:done` on the head closes every sub-piece, and is refused while any sub-piece is still building or being removed. A wrong part is a new piece; the head stays on dev. Release waits for the whole chain, like for any piece on dev.
+- **The cost.** The sub-pieces trace to the head, not to the client, and a wrong turn in sub-piece 1 is built into 2 to 5 before anyone looks. The split stop is where you catch it: read the sub-pieces, not the plan.
+- **Dropping part of a chain.** A chain nothing was built for drops whole. Once a sub-piece is built, the chain drops sub-piece by sub-piece, the last first; the head follows when the last one lands. Drop one sub-piece and keep the rest, and the head stays put: its contract promises items that won't be built. Either approve a head change in one line that takes them out, or drop the rest.
+- A tracker made before this release has no Head column: say "upgrade the project page" in chat once.
+
 | Command | Where | What it does |
 | --- | --- | --- |
-| "start a project", "file the meeting", "add an idea", "spec a piece", "status" | chat | the ship-spec skill |
+| "start a project", "file the meeting", "add an idea", "spec a piece", "spec a chain", "status" | chat | the ship-spec skill |
 | `/mg-ship-kit:setup` | Code tab | once per project, and again after a plugin update |
 | `/mg-ship-kit:next` | Code tab | pick up the next Ready piece |
 | `/mg-ship-kit:cto-check` | Code tab | run the check, walk the way out, push to dev |
+| `/mg-ship-kit:chain` | Code tab | split a chain head, stop for your go, build the sub-pieces in one run |
 | `/mg-ship-kit:done` | Code tab | the client accepted it |
 | `/mg-ship-kit:drop` | Code tab | the client rejected it: delete the code |
 
 ## 8. Release to main
 
-- Release is open when no piece is Building or On dev, so every piece has a verdict. `/mg-ship-kit:done` tells you when it opens.
+- Release is open when no piece is Building or On dev, so every piece has a verdict. A chain counts as one piece: its head. `/mg-ship-kit:done` tells you when it opens.
 - Push dev to main. The gate blocks a release while a piece is building or on dev, and ships only what is already on dev.
 - By hand before every release, until the kit covers it: dev and live use separate databases; a backup runs before every migration; automatic daily backups are kept off the server and the latest is under a day old; a restore was tested at least once; rollback is one command and was rehearsed; no secret is in the repo; an alert fires when live goes down. The release note opens with the count, for example "Floor: 7/7". Nothing ships while one fails. Fix it first.
 - Who touches a server. Your own server: you and Claude. A client's cloud server: only after practice runs on your own, in plan mode, every command approved. A bank, telecom or government server: a real devops sets it up and holds access; you build and support. Code reaches live only through the pipeline, never by hand over SSH. Claude never works on a live server in auto mode.
