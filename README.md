@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.8 — 6 Nov 2026.** For ship-spec 0.7.0 and the mg-ship-kit plugin 0.7.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.9 — 6 Nov 2026.** For ship-spec 0.8.0 and the mg-ship-kit plugin 0.8.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -10,7 +10,7 @@ New here? Open a new Claude chat, paste this page's link, and ask it to walk you
 
 Build, ship and support software people pay for, without a dev team.
 
-You spec one small piece in Claude chat. It lands in the project's Notion tracker as Ready. Claude Code picks it up, builds it, and can't push it to dev until it matches its contract, uses only the agreed stack and leaves no unused code behind. The client tests it on dev; their verdict closes it. Release to main waits until nothing is building and every piece on dev has a verdict.
+You spec one small piece in Claude chat. It lands in the project's Notion tracker as Ready. Claude Code picks it up, builds it, and can't push it to dev until it matches its contract, uses only the agreed stack, leaves no unused code behind and passes a security review. The client tests it on dev; their verdict closes it. Release to main waits until nothing is building and every piece on dev has a verdict.
 
 The rules that hold it together:
 
@@ -68,7 +68,7 @@ The page, top to bottom. The exact lines, columns and views are in [plugins/mg-s
 | Part | What it holds | Who writes it |
 | --- | --- | --- |
 | Facts | Fixed facts and links: what it does, how it's sold, the track, clients and contacts, the repo, dev and live links, the Drive folder, the design system, where secrets are kept. Never a secret itself. | Chat at start; you correct it |
-| Tracker | One row per piece: name, order, status (Ready → Building → On dev → Done, or Dropped), size, contract file. The full contract sits inside the row. | Chat adds Ready rows; after pickup only Claude Code |
+| Tracker | One row per piece: name, order, status (Ready → Building → On dev → Done, or Dropped), size, contract file, security (the review's result). The full contract sits inside the row. | Chat adds Ready rows; after pickup only Claude Code |
 | Meetings | One row per client meeting, the notes in the body. Ticked once every request is filed. | You; chat ticks it |
 | Backlog | One row per request: who said it (the client, your notes on the client, a user, your own idea, a competitor), the exact words, which client asked, status (New → Specced, or Dropped), a link to its piece and that piece's live status. | Chat, from what you give it: meeting notes, an idea, a screenshot, a user's words. You may also add a row by hand |
 | Notes | Yours. No tool reads it. | You |
@@ -144,11 +144,14 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 
 - Run `/mg-ship-kit:cto-check`. Three checks: Size (what got built against the list), Stack (a package or import outside the list), Leftovers (unused code on the lines the piece added, found by vulture and knip). A failed check stops the piece.
 - The way out. An extra the client asked for: you approve a contract change in one line. An extra nobody asked for: Claude deletes it. A new package: you approve it in one line, or Claude removes it. Leftovers: Claude deletes them. Then the check runs again.
+- On a pass, the same command runs the security review (D66). The script, not Claude, decides whether the piece touches risky ground: routes, the database, login and permissions, uploads, config and env, or a new package. A piece that doesn't gets a skip note. One that does is read by a reviewer agent that sees the diff, the contract and the repo, but never Claude's plan or chat; then a checker agent tries to prove each finding with a test. Only a proven finding counts.
+- A proven critical or major finding stops the piece. The way out: Claude fixes it until its test passes (the test stays in the repo), or you waive it in one line with your reason. Claude never waives one. The result lands in `contracts/reviews/` and on the tracker row's Security column, for example "2 found, 1 fixed, 1 waived".
+- The review costs tokens: two agents per risky piece. `spend` in `ship.json` picks the models: `lean`, `standard` (the default) or `deep`. Use deep for a bank or telecom project, lean for a side project. `review_all: true` reviews every piece; `review_paths` adds a path the script missed.
 - On a pass, Claude may propose a line or two for `CLAUDE.md` from what the piece taught. Approve in one line or decline.
 
 **To dev (Code tab)**
 
-- Say "push". The gate runs the check again and refuses uncommitted changes; GitHub runs it once more before anything deploys. The row moves to On dev.
+- Say "push". The gate runs the check again, refuses uncommitted changes, and refuses a piece whose review is missing, covers older code, or has a proven critical or major finding still open; GitHub runs the same check once more before anything deploys. The row moves to On dev.
 - Ask the client to test on the Dev URL against the "How to check it" lines.
 - Start the next piece now with `/mg-ship-kit:next`. Pieces on dev don't block the next one.
 
@@ -176,7 +179,7 @@ Some features are one thing to the client and five pieces to build: a list page,
 | "start a project", "file the meeting", "add an idea", "spec a piece", "spec a chain", "status", "give me the project instructions" | chat | the ship-spec skill |
 | `/mg-ship-kit:setup` | Code tab | once per project; again when the track changes, or when the plugin can't open its refresh PR |
 | `/mg-ship-kit:next` | Code tab | pick up the next Ready piece |
-| `/mg-ship-kit:cto-check` | Code tab | run the check, walk the way out, push to dev |
+| `/mg-ship-kit:cto-check` | Code tab | run the check and the security review, walk the way out, push to dev |
 | `/mg-ship-kit:chain` | Code tab | split a chain head, stop for your go, build the sub-pieces in one run |
 | `/mg-ship-kit:done` | Code tab | the client accepted it |
 | `/mg-ship-kit:drop` | Code tab | the client rejected it: delete the code |
@@ -185,7 +188,7 @@ Some features are one thing to the client and five pieces to build: a list page,
 
 - Release is open when no piece is Building or On dev, so every piece has a verdict. A chain counts as one piece: its head. `/mg-ship-kit:done` tells you when it opens.
 - Push dev to main. The gate blocks a release while a piece is building or on dev, and ships only what is already on dev.
-- By hand before every release, until the kit covers it: dev and live use separate databases; a backup runs before every migration; automatic daily backups are kept off the server and the latest is under a day old; a restore was tested at least once; rollback is one command and was rehearsed; no secret is in the repo; an alert fires when live goes down. The release note opens with the count, for example "Floor: 7/7". Nothing ships while one fails. Fix it first.
+- By hand before every release, until the kit covers it: dev and live use separate databases; a backup runs before every migration; automatic daily backups are kept off the server and the latest is under a day old; a restore was tested at least once; rollback is one command and was rehearsed; no secret is in the repo; an alert fires when live goes down. The release note opens with the count, for example "Floor: 7/7", then the waivers line `/mg-ship-kit:done` prints when release opens: "Waived: 0", or each waived finding. Nothing ships while one fails. Fix it first.
 - Who touches a server. Your own server: you and Claude. A client's cloud server: only after practice runs on your own, in plan mode, every command approved. A bank, telecom or government server: a real devops sets it up and holds access; you build and support. Code reaches live only through the pipeline, never by hand over SSH. Claude never works on a live server in auto mode.
 
 ## 9. Support
@@ -199,7 +202,7 @@ Listed so nobody expects it:
 
 - A problem button inside the product that files tickets.
 - The server and data checks in the pipeline. Step 8 is by hand.
-- The code-safety scan (missing login, user text going into SQL, keys in code) and the release-time library scan.
+- The release-time library scan (known holes in the packages you already use). The security review looks at what each piece adds.
 - A quick lane. Today a one-line fix needs a small contract too.
 - The sales check at the contract (three people who would pay, what they'd pay, who opens the door) and the research method.
 - The Claude Design step: a design link in the contract.
