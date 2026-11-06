@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.6 — 6 Nov 2026.** For ship-spec 0.6.0 and the mg-ship-kit plugin 0.6.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.7 — 6 Nov 2026.** For ship-spec 0.6.1 and the mg-ship-kit plugin 0.6.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -30,14 +30,14 @@ Per person and per machine. Done once; item 8 says what to repeat after a kit ch
 2. **GitHub.** An account. The kit repo is private: ask its owner to add you to the mgac-consulting organization (Read is enough). For Ship to work in cloud sessions, the organization's owner also installs Claude's GitHub app on mgac-consulting with access to ship-kit: once per organization, not per person.
 3. **Notion.** A workspace where you can add teamspaces. In your Claude account, turn the Notion connector on; the Code tab uses it when you sign in with the same account.
 4. **On the machine.** git and python3; Node.js if your projects have a frontend. Git access to GitHub from the Code tab: `gh auth login`, then `gh auth setup-git`, or an SSH key. Ask Claude in the Code tab to walk you through it.
-5. **The chat skill.** Get the `ship-spec` zip from the kit's owner, or zip the kit's [`chat/ship-spec`](https://github.com/mgac-consulting/ship-kit/blob/main/chat/ship-spec) folder yourself (both files). Upload it as a skill in your Claude account. Its Version line tells chat which version is installed. Repeat after each kit change.
+5. **The chat skill.** In claude.ai open **Customize → Plugins → Add → Add marketplace** and enter `mgac-consulting/ship-kit`. When asked, connect GitHub and give the Claude GitHub App access to the repo. Turn on **Sync automatically**, then add the **ship-spec** plugin from that marketplace. Add only ship-spec: the Code tab installs mg-ship-kit itself (item 6). From then on chat gets each kit change by itself. If you uploaded ship-spec as a skill before, remove that copy.
 6. **The plugin.** In the Code tab run `/plugin marketplace add mgac-consulting/ship-kit`, then `/plugin install mg-ship-kit@ship-kit`. The desktop app's Code tab installs plugins the same way from the `+` menu. This install is for your machine only: cloud sessions can't see it. They load the plugin from the project's repo once `/mg-ship-kit:setup` has run there (step 5).
 7. **Check.** In a new chat, "what can ship-spec do?" gets an answer. In the Code tab, `/mg-ship-kit:setup` is in the command list.
 8. **After a kit change.** The kit's README says what changed. Most of it now comes by itself:
    - **The plugin** updates itself in the background, a few minutes into a session (setup turns this on in step 5). To have it at once: `/plugin marketplace update ship-kit`, then in `/plugin` open Installed → mg-ship-kit → Update now, then `/reload-plugins`.
    - **Each project**, at its next Claude Code session: the plugin opens a PR on the repo that refreshes the GitHub check, and Claude updates the Kit line on the project page. Merge the PR into dev, then pull dev. The PR needs `gh` logged in; without it, Claude says to run `/mg-ship-kit:setup` and commit `.github/` instead.
    - **The project page** gets any new column or line from chat itself, before its next job. It only adds.
-   - **The chat skill** is the one thing you redo by hand: if `chat/` changed, repeat item 5. You don't have to remember: before each job, chat compares its version with the project's Kit line and stops with "Re-upload ship-spec" when it's behind.
+   - **The chat skill** updates by itself from the marketplace (item 5). If one is ever behind, chat says so before its next job and tells you where to select **Check for updates**.
 
    **Once, for 0.6.0:** in each project, open a Claude Code session and run `/mg-ship-kit:setup` once. It turns auto-update on, takes the kit's old rule lines out of `CLAUDE.md` (they come from the plugin now) and asks for the Kit line. Then in chat say "give me the project instructions" and paste them into the project's Claude Project (step 4, item 5). **Once, for 0.4.0:** the plugin was renamed from `ship` to `mg-ship-kit`, so an update doesn't carry it over. Run `/plugin uninstall ship@ship-kit`, then `/plugin install mg-ship-kit@ship-kit`, then `/reload-plugins`. In each project, run `/mg-ship-kit:setup` and change any `/ship:` command in its `CLAUDE.md` to `/mg-ship-kit:`; setup warns until you do.
 
@@ -64,7 +64,7 @@ Per person and per machine. Done once; item 8 says what to repeat after a kit ch
 5. It gives you a short block of instructions for the project's Claude Project. Make a Claude Project named after the project and paste the block into its instructions, once. It never needs changing: it tells chat to load ship-spec and holds only the reply style (one screen, one decision, nothing locks without your yes). Everything else comes from the skill, which updates with the kit. Lost it? Say "give me the project instructions".
 6. Its last line sends you to `/mg-ship-kit:setup`. Spec nothing yet: set the repo up first (step 5) and pass the checklist (step 6).
 
-The page, top to bottom. The exact lines, columns and views are in [chat/ship-spec/page-layout.md](https://github.com/mgac-consulting/ship-kit/blob/main/chat/ship-spec/page-layout.md); this guide never copies them.
+The page, top to bottom. The exact lines, columns and views are in [chat/skills/ship-spec/page-layout.md](https://github.com/mgac-consulting/ship-kit/blob/main/chat/skills/ship-spec/page-layout.md); this guide never copies them.
 
 | Part | What it holds | Who writes it |
 | --- | --- | --- |
@@ -205,7 +205,6 @@ Listed so nobody expects it:
 - The sales check at the contract (three people who would pay, what they'd pay, who opens the door) and the research method.
 - The Claude Design step: a design link in the contract.
 - A setup check command. Step 6 is by hand.
-- A chat skill that updates itself. Claude's chat skills are uploaded by hand, so after a kit change that touches `chat/` you upload ship-spec again. Chat tells you when.
 - The cloudflare track. Setup stops on it until its stack list, size counts and deploy land.
 
 For a deep talk, the old roles are still there as chat skills: "Summon PM", "Summon CTO", "Summon Client", "Summon Skeptic". They were written for Scout and still use its words (Build Tracker, Stage 0): use them for thinking, not for Ship's steps.
