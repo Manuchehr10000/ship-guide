@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.11 — 7 Nov 2026.** For ship-spec 0.10.0 and the mg-ship-kit plugin 0.10.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.12 — 7 Nov 2026.** For ship-spec 0.11.0 and the mg-ship-kit plugin 0.11.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -197,6 +197,7 @@ Some features are one thing to the client and five pieces to build: a list page,
 
 - Keep the weekly client meeting. Its notes go into Meetings; "file the meeting" turns them into Backlog rows; step 7 takes it from there.
 - Bugs and requests sit in the same Backlog, in the client's words. One list.
+- A bug becomes a piece marked `Fixes:` (D77): chat adds the line when the request says something broke, and you can correct it at approval. A bug fix doesn't pass the check until Claude records what stops it next time (D76, D78): a test that fails on the bug, a line for the project's CLAUDE.md (only with your yes), or, when the kit itself should have caught it, an issue on ship-kit labelled `lesson` (D79). There's no list of rules to remember: each lesson is something that runs, or a fact Claude reads. Triage the `lesson` issues on ship-kit now and then; the good ones become kit checks.
 
 ## 10. Not in the kit yet
 
