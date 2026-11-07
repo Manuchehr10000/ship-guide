@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.12 — 7 Nov 2026.** For ship-spec 0.11.0 and the mg-ship-kit plugin 0.11.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.13 — 7 Nov 2026.** For ship-spec 0.12.0 and the mg-ship-kit plugin 0.12.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -57,7 +57,7 @@ Per person and per machine. Done once; item 8 says what to repeat after a kit ch
 ## 4. Chat: start the project page
 
 1. In a new Claude chat, say "start a project". The ship-spec skill answers.
-2. It lists your teamspaces and asks for what's missing: the project name, one line on what it does, how it's sold (one client, several clients, or a public app), each client with a contact, the repo link, and where secrets are kept. A line each. "Not yet" is fine for the rest. Then it searches the web for what already exists (D72): a product you could adopt, an open-source project to fork, libraries for the big parts. It shows a verdict per part, adopt, fork or build, each with its licence, and asks for one line for the Facts: `Reuse: adopt | fork | build — what, licence`. It writes the line only on your yes. Say "skip" to skip the search.
+2. It lists your teamspaces and asks for what's missing: the project name, one line on what it does, how it's sold (one client, several clients, or a public app), each client with a contact, the repo link, and where secrets are kept. A line each. "Not yet" is fine for the rest. Then it searches the web for what already exists (D72): a product you could adopt, an open-source project to fork, libraries for the big parts. It shows a verdict per part, adopt, fork or build, each with its licence, and asks for one line for the Facts: `Reuse: adopt | fork | build — what, licence`. It writes the line only on your yes. Say "skip" to skip the search. It also offers market research (D85): how others already solved this problem for users, at most five findings with links, and what's missing everywhere. On your yes it runs and offers one more Facts line, `Market: closest rival — what they do, what's missing`.
 3. It picks the track: where the project runs, and on what stack. It asks up to four plain questions (a bank, telecom or government client? a devops on your team? mostly data work, or pages and forms? a card for $5 a month or more?) and names the track with its reason: devops, railway or cloudflare. You're never asked which stack. If you want another track and can say why, say so: your track and your reason go on the Track line. A bank, telecom or government client with no devops stops here: find a devops first.
 4. It builds the page at the teamspace's root, fetches it back and checks that every part is there. You get the link.
 5. It gives you a short block of instructions for the project's Claude Project. Make a Claude Project named after the project and paste the block into its instructions, once. It never needs changing: it tells chat to load ship-spec and holds only the reply style (one screen, one decision, nothing locks without your yes). Everything else comes from the skill, which updates with the kit. Lost it? Say "give me the project instructions".
@@ -129,6 +129,14 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 - Your own idea or a competitor's screen: "add an idea", with the screenshot. A user's review, ticket or message: paste it; it's filed as the user's words, never reworded.
 - Nothing is invented. A request that isn't in the Backlog gets added first.
 
+**Think it through first (chat, optional)**
+
+Three roles help before a spec. Each is a way of talking, not a step: none of them writes a contract or a tracker row.
+- **"Summon PO"**: names the problem behind a request, pushes where it's weak, and offers two or three ways to slice it, with a pick. It ends with the slice and its Backlog rows; say "spec it" and chat drafts the contract.
+- **"Summon Client"**: plays the project's own client, from the Facts and that client's meeting notes and requests, in the first person: pain and objections, never solutions. Its words are never evidence that anyone will pay, and anything worth keeping is filed as your own idea, not the client's.
+- **"Summon Architect"**: the shape of the system: a new project, how to cut a chain, the data model. It works in chat and in the Code tab, where it also reads the repo. It never edits code or the stack list. It is not the CTO check.
+- **Market research** (D85): when PO judges a request new to the team, it offers market research in one line; PO waits for it before slicing. The findings go in the request's Backlog row, dated. Older than six months, they're flagged and a fresh run is offered. In the Code tab it runs in the background.
+
 **Spec (chat)**
 
 - Say "spec a piece". Chat shows the New requests; you pick one or more. It drafts the contract on one screen: the words it comes from, what users see, what's out, how to check it ("When I …, then I see …"), and the size as counts of screens, endpoints and tables.
@@ -167,7 +175,7 @@ Ticked by hand for now; the kit has no command for it yet. GitHub doesn't let yo
 
 Some features are one thing to the client and five pieces to build: a list page, a detail page, two endpoints and a table. Piece by piece, that is five specs, five pushes and five rounds of waiting. A chain does it in one run and keeps a reader where it matters.
 
-- **Spec (chat).** Say "spec a chain". The contract is the head: the whole feature's "What users see", the client's test of the whole feature, and a Size that names everything it adds, every item with its full path or name. Before the draft, chat searches for libraries that already do the feature's parts (D72), starting from the Facts' Reuse line. The head carries a Reuse block: one line per part, adopt a named package with its licence, or build and why. Approving the head approves those packages, so the build won't stop for them (D73). A licence that isn't permissive (LGPL, GPL, AGPL, none) needs your words on its line, "ok: and why", or Claude Code refuses the head (D74): an AGPL library in a client's web app can oblige you to publish its source. You approve it in one line, as always. It lands in the tracker as Ready, marked as a chain head.
+- **Spec (chat).** Say "spec a chain". The contract is the head: the whole feature's "What users see", the client's test of the whole feature, and a Size that names everything it adds, every item with its full path or name. Before the draft, chat offers market research (unless the requests already hold fresh findings), then searches for libraries that already do the feature's parts (D72), starting from the Facts' Reuse line. The head carries a Reuse block: one line per part, adopt a named package with its licence, or build and why. Approving the head approves those packages, so the build won't stop for them (D73). A licence that isn't permissive (LGPL, GPL, AGPL, none) needs your words on its line, "ok: and why", or Claude Code refuses the head (D74): an AGPL library in a client's web app can oblige you to publish its source. You approve it in one line, as always. It lands in the tracker as Ready, marked as a chain head.
 - **Split (Code tab).** Run `/mg-ship-kit:chain`. Claude picks the head up and splits it into sub-pieces: two to six contracts of its own, foundations first, each naming only what the head names, every head item in exactly one sub-piece, each count equal to its names. The kit refuses any other split, and refuses a head that doesn't name what it counts. Each sub-piece gets a tracker row under the head (the Head column). Then Claude stops and shows you the split on one screen.
 - **Go.** Read the sub-pieces, here or in the tracker. Say "go". That is the one stop: after it Claude builds the sub-pieces in order, each through the same check and push as a piece. Before each next sub-piece the kit itself asks GitHub whether the check is green on dev (through `gh`, so `gh auth login` once); not green, or no answer, and the chain halts, however it was resumed.
 - **Halts.** The chain stops itself for three reasons only: a check fails for something that needs your word (an extra, a new package); GitHub's check goes red, or can't be asked; a sub-contract leaves a question open (two ways to build it, or something it needs that it doesn't name — Claude never edits a contract to answer its own question). You answer or walk the way out with `/mg-ship-kit:cto-check`, then `/mg-ship-kit:chain` continues from where it stopped. What was built stays where it is.
@@ -207,13 +215,13 @@ Listed so nobody expects it:
 - The server and data checks in the pipeline. Step 8 is by hand.
 - The release-time library scan (known holes in the packages you already use). The security review looks at what each piece adds.
 - A quick lane. Today a one-line fix needs a small contract too.
-- The sales check at the contract (three people who would pay, what they'd pay, who opens the door) and the rest of the research method (market, buyers). The reuse search is in (step 4 and chains).
+- The sales check at the contract (three people who would pay, what they'd pay, who opens the door) and research on buyers. The reuse search and market research are in (step 4, step 7 and chains).
 - The Claude Design step: a design link in the contract.
 - A setup check command. Step 6 is by hand.
 - The cloudflare track. Setup stops on it until its stack list, size counts and deploy land.
 - Cloud sessions with the plugin. Claude Code on the web may not load plugins from your account, and it never adds a repo's own marketplace. Until a cloud session is tested, build Ship pieces in the desktop Code tab.
 
-For a deep talk, the old roles are still there as chat skills: "Summon PM", "Summon CTO", "Summon Client", "Summon Skeptic". They were written for Scout and still use its words (Build Tracker, Stage 0): use them for thinking, not for Ship's steps.
+The old Scout roles (PM, CTO, Client, Skeptic) are retired (D84): PO, Client and Architect come with the plugin (step 7). If they're still uploaded on your account, remove them under Customize → Skills, or the old Client may answer "Summon Client".
 
 ## Where things live
 
