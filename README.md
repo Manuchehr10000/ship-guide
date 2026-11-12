@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.18 — 12 Nov 2026.** For ship-spec 0.16.0 and the mg-ship-kit plugin 0.16.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.19 — 12 Nov 2026.** For ship-spec 0.16.1 and the mg-ship-kit plugin 0.16.1. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
