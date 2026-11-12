@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.17 — 12 Nov 2026.** For ship-spec 0.15.0 and the mg-ship-kit plugin 0.15.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.18 — 12 Nov 2026.** For ship-spec 0.16.0 and the mg-ship-kit plugin 0.16.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -10,7 +10,7 @@ New here? Open a new Claude chat, paste this page's link, and ask it to walk you
 
 Build, ship and support software people pay for, without a dev team.
 
-You spec one small piece in Claude chat. It lands in the project's Notion tracker as Ready. Claude Code picks it up, builds it, and can't push it to dev until it matches its contract, uses only the agreed stack, leaves no unused code behind and passes a security review. The client tests it on dev; their verdict closes it. Release to main waits until nothing is building and every piece on dev has a verdict.
+You spec one small piece in Claude chat. It lands in the project's Notion tracker as Ready. Claude Code picks it up, builds it, and can't push it to dev until it matches its contract, uses only the agreed stack, leaves no unused code behind and passes a security review. The client tests it on dev; their verdict closes it. Release to main waits until every piece on dev has a verdict. Pieces that don't depend on each other build at the same time, each in its own Claude Code session.
 
 The rules that hold it together:
 
@@ -38,7 +38,7 @@ Per person and per machine. Done once; item 8 says what to repeat after a kit ch
    - **Each project**, at its next Claude Code session: the plugin opens a PR on the repo that refreshes the GitHub check, and Claude updates the Kit line on the project page. Merge the PR into dev, then pull dev. The PR needs `gh` logged in; without it, Claude says to run `/mg-ship-kit:setup` and commit `.github/` instead.
    - **The project page** gets any new column or line from chat itself, before its next job. It only adds.
 
-   **Once, for 0.15.0:** in each repo, run `/mg-ship-kit:setup` again on `dev` and commit what it wrote (the Kit line, and the CI copy, which now holds the quick lane's limits). Then `/mg-ship-kit:quick` is ready (step 7). Claude can now run `/mg-ship-kit:cto-check` and `/mg-ship-kit:quick` for you on your own words; you can still type them. **Once, for 0.14.0:** in each repo, run `/mg-ship-kit:setup` again on `dev` and commit what it wrote: it makes the repo's build map and its "Build map" sub-page (step 5). Chat raises the page to layout 5 by itself. **Once, for 0.13.0:** nothing to install. If a project's code lives in several repos, say "add a repo" in chat for each one you ship from, run `/mg-ship-kit:setup` in each of them on `dev`, and set the Repo of its Ready rows (step 3). **Once, for 0.7.0:** remove the old copies (item 6) and add the plugin on your account (item 5). Then in each project, open a Claude Code session and run `/mg-ship-kit:setup` once. It takes the old plugin lines out of `.claude/settings.json`, takes the kit's old rule lines out of `CLAUDE.md` (they come from the plugin now) and asks for the Kit line. Commit what it changed. Then in chat say "give me the project instructions" and paste them into the project's Claude Project (step 4, item 5). **Once, for 0.4.0:** the plugin was renamed from `ship` to `mg-ship-kit`, so an update doesn't carry it over. Run `/plugin uninstall ship@ship-kit`, then `/plugin install mg-ship-kit@ship-kit`, then `/reload-plugins`. In each project, run `/mg-ship-kit:setup` and change any `/ship:` command in its `CLAUDE.md` to `/mg-ship-kit:`; setup warns until you do.
+   **Once, for 0.16.0:** nothing to install. Chat adds the tracker's Depends on column by itself and offers to write the Depends on lines of the rows already Ready; a row without one builds one at a time, as before (step 7). **Once, for 0.15.0:** in each repo, run `/mg-ship-kit:setup` again on `dev` and commit what it wrote (the Kit line, and the CI copy, which now holds the quick lane's limits). Then `/mg-ship-kit:quick` is ready (step 7). Claude can now run `/mg-ship-kit:cto-check` and `/mg-ship-kit:quick` for you on your own words; you can still type them. **Once, for 0.14.0:** in each repo, run `/mg-ship-kit:setup` again on `dev` and commit what it wrote: it makes the repo's build map and its "Build map" sub-page (step 5). Chat raises the page to layout 5 by itself. **Once, for 0.13.0:** nothing to install. If a project's code lives in several repos, say "add a repo" in chat for each one you ship from, run `/mg-ship-kit:setup` in each of them on `dev`, and set the Repo of its Ready rows (step 3). **Once, for 0.7.0:** remove the old copies (item 6) and add the plugin on your account (item 5). Then in each project, open a Claude Code session and run `/mg-ship-kit:setup` once. It takes the old plugin lines out of `.claude/settings.json`, takes the kit's old rule lines out of `CLAUDE.md` (they come from the plugin now) and asks for the Kit line. Commit what it changed. Then in chat say "give me the project instructions" and paste them into the project's Claude Project (step 4, item 5). **Once, for 0.4.0:** the plugin was renamed from `ship` to `mg-ship-kit`, so an update doesn't carry it over. Run `/plugin uninstall ship@ship-kit`, then `/plugin install mg-ship-kit@ship-kit`, then `/reload-plugins`. In each project, run `/mg-ship-kit:setup` and change any `/ship:` command in its `CLAUDE.md` to `/mg-ship-kit:`; setup warns until you do.
 
 ## 2. Notion: the project's teamspace
 
@@ -69,7 +69,7 @@ The page, top to bottom. The exact lines, columns and views are in [plugins/mg-s
 | Part | What it holds | Who writes it |
 | --- | --- | --- |
 | Facts | Fixed facts and links: what it does, how it's sold, the track, clients and contacts, the repo (or the list of repos), dev and live links, the Drive folder, the design system, where secrets are kept. Never a secret itself. | Chat at start; you correct it |
-| Tracker | One row per piece: name, order, status (Ready → Building → On dev → Done, or Dropped), size, contract file, security (the review's result), repo (which repo it lives in). The full contract sits inside the row. | Chat adds Ready rows; after pickup only Claude Code |
+| Tracker | One row per piece: name, order, status (Ready → Building → On dev → Done, or Dropped), size, contract file, security (the review's result), repo (which repo it lives in), depends on (the pieces it needs on dev first). The full contract sits inside the row. | Chat adds Ready rows; after pickup only Claude Code |
 | Meetings | One row per client meeting, the notes in the body. Ticked once every request is filed. | You; chat ticks it |
 | Backlog | One row per request: who said it (the client, your notes on the client, a user, your own idea, a competitor), the exact words, which client asked, status (New → Specced, or Dropped), a link to its piece and that piece's live status. | Chat, from what you give it: meeting notes, an idea, a screenshot, a user's words. You may also add a row by hand |
 | Notes | Yours. No tool reads it. | You |
@@ -143,11 +143,14 @@ Three roles help before a spec. Each is a way of talking, not a step: none of th
 
 - Say "spec a piece". Chat shows the New requests; you pick one or more. It drafts the contract on one screen: the words it comes from, what users see, what's out, how to check it ("When I …, then I see …"), and the size as counts of screens, endpoints and tables. Before it drafts, it reads the build map of the piece's repo, so the draft names the table or route that already exists instead of guessing; it names what it relies on, so a wrong one shows. A stale map (dev changed since) is still read, with a warning. Before a chain head, it asks you to have Claude Code confirm the two or three map claims the chain leans on: the map's age shows, a wrong line doesn't.
 - Read it. Approve in one line, or say what to change. On a project with several repos, chat says which repo the piece lives in, with its reason, and you can name another; the row's Repo column carries it, and only that repo's Claude Code picks it up. On approval the piece gets a Tracker row as Ready, and its requests become Specced and link to it.
-- If one client test can't cover it, split it into pieces, or spec it as a chain (below) to have Claude Code build the parts in one run. Pieces build one at a time.
+- Each draft says what the piece depends on (D93): the pieces it needs on dev before it can build, or none. A piece depends on another when it uses or changes a table, endpoint or screen the other adds or changes, and the other isn't Done yet. Two pieces that add or change tables always do, because their database migrations must run in order. A piece with no dependencies can build alongside the others. When chat isn't sure, it names the dependency: a missed one costs a stop later, a named one only waits.
+- If one client test can't cover it, split it into pieces, or spec it as a chain (below) to have Claude Code build the parts in one run.
 
 **Pick up and build (Code tab)**
 
-- Run `/mg-ship-kit:next`. It takes the lowest-Order Ready piece of this repo, saves the contract to `contracts/`, marks the row Building and writes a read-only copy into the row. Only Claude Code writes that copy; a hand edit stops it.
+- Run `/mg-ship-kit:next`. It takes the lowest-Order Ready piece of this repo whose dependencies are all On dev or Done, saves the contract to `contracts/`, marks the row Building and writes a read-only copy into the row. Only Claude Code writes that copy; a hand edit stops it.
+- To build two pieces at once (D93), open a second session with its own copy of the repo, a new cloud session or a desktop session in its own worktree, and run `/mg-ship-kit:next` there. One piece builds per session; two sessions in one folder can't both build, since the second `/mg-ship-kit:next` sees the first piece and refuses. Start them one after another: wait until the first shows its row as Building. Each extra session means one more check, review and client test for you; parallel pays only when you wait on Claude more than Claude waits on you.
+- A row specced before Depends on builds only while nothing else of its repo is building, as before; say "add the Depends on lines" in chat to change that.
 - Claude builds what the contract lists and nothing more. You read the one screen, not the plan.
 - A change the client asks for mid-build is a contract change: you approve it in one line. Claude never edits a contract on its own.
 
@@ -163,6 +166,7 @@ Three roles help before a spec. Each is a way of talking, not a step: none of th
 **To dev (Code tab)**
 
 - Every push, to any branch, is first scanned for secrets (D67–D70): gitleaks reads each commit not yet on GitHub, so a key added and later deleted is still found. A finding stops the push before the key leaves your machine. The way out: Claude takes the key out of the code and out of those commits, and you replace it if it was ever pushed anywhere. A false alarm (a test value, an example key) is cleared only by you, in one line; Claude writes it into `.gitleaksignore` with your words. A `gitleaks:allow` comment in the code clears nothing. GitHub scans every branch again, so a push from your own terminal is caught too, though by then the key is on GitHub.
+- If another session pushed a piece to dev while this one was building, `/mg-ship-kit:cto-check` first brings this piece up to date with dev (it rebases it). It stops and asks you when the two pieces changed the same file, or their changes clash: they weren't independent after all. You decide: fold the two together here, or drop this piece and re-spec it to depend on the other. Two pieces that each added a database migration fail the check until one points at the other.
 - Say "push". The gate runs the check again, refuses uncommitted changes, and refuses a piece whose review is missing, covers older code, or has a proven critical or major finding still open; GitHub runs the same check once more before anything deploys. The row moves to On dev.
 - Ask the client to test on the Dev URL against the "How to check it" lines.
 - Start the next piece now with `/mg-ship-kit:next`. Pieces on dev don't block the next one.
@@ -170,7 +174,7 @@ Three roles help before a spec. Each is a way of talking, not a step: none of th
 **The verdict (Code tab)**
 
 - Accepted: `/mg-ship-kit:done`. The row becomes Done, and the build map is rebuilt from dev: the counts by the script, the decisions and gaps lines by Claude (ten at most), then its copy on the page.
-- Rejected: `/mg-ship-kit:drop`. The code is deleted and the row becomes Dropped. Git keeps it.
+- Rejected: `/mg-ship-kit:drop`. The code is deleted and the row becomes Dropped. Git keeps it. While another open piece depends on it, the drop is refused and names that piece: drop it first, or change it in chat.
 - Nearly right: for now, leave it on dev, file the change as a new request, spec and build the fix; the client then tests both. Whether a reopen joins the kit is decided after the first run.
 
 **A quick fix: one word, one label (Code tab)**
@@ -201,7 +205,7 @@ Some features are one thing to the client and five pieces to build: a list page,
 | --- | --- | --- |
 | "start a project", "file the meeting", "add an idea", "spec a piece", "spec a chain", "status", "give me the project instructions" | chat | the ship-spec skill |
 | `/mg-ship-kit:setup` | Code tab | once per repo, on dev; again when the track changes, or when the plugin can't open its refresh PR |
-| `/mg-ship-kit:next` | Code tab | pick up the next Ready piece |
+| `/mg-ship-kit:next` | Code tab | pick up the next Ready piece whose dependencies are on dev; in a second session, a second piece alongside |
 | `/mg-ship-kit:cto-check` | Code tab | run the check and the security review, walk the way out, push to dev |
 | `/mg-ship-kit:quick` | Code tab | a one-line change in your words, with no spec; you check it on dev |
 | `/mg-ship-kit:chain` | Code tab | split a chain head, stop for your go, build the sub-pieces in one run |
@@ -210,7 +214,7 @@ Some features are one thing to the client and five pieces to build: a list page,
 
 ## 8. Release to main
 
-- Release is open when no piece is Building or On dev, so every piece has a verdict. A chain counts as one piece: its head. `/mg-ship-kit:done` tells you when it opens.
+- Release is open when no piece is On dev without a verdict and nothing half-built is on dev. A chain counts as one piece: its head. A piece building in another session isn't on dev, so it doesn't ship and doesn't hold the release back. `/mg-ship-kit:done` tells you when release opens, and names what is still building elsewhere.
 - Push dev to main. The gate blocks a release while a piece is building or on dev, and ships only what is already on dev.
 - By hand before every release, until the kit covers it: dev and live use separate databases; a backup runs before every migration; automatic daily backups are kept off the server and the latest is under a day old; a restore was tested at least once; rollback is one command and was rehearsed; no secret is in the repo (the scan covers every commit since setup; by hand, check that setup's history list was dealt with); an alert fires when live goes down. The release note opens with the count, for example "Floor: 7/7", then the waivers line `/mg-ship-kit:done` prints when release opens: "Waived: 0", or each waived finding. Nothing ships while one fails. Fix it first.
 - Who touches a server. Your own server: you and Claude. A client's cloud server: only after practice runs on your own, in plan mode, every command approved. A bank, telecom or government server: a real devops sets it up and holds access; you build and support. Code reaches live only through the pipeline, never by hand over SSH. Claude never works on a live server in auto mode.
