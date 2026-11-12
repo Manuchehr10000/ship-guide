@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.15 — 11 Nov 2026.** For ship-spec 0.14.0 and the mg-ship-kit plugin 0.14.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.17 — 12 Nov 2026.** For ship-spec 0.15.0 and the mg-ship-kit plugin 0.15.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -38,7 +38,7 @@ Per person and per machine. Done once; item 8 says what to repeat after a kit ch
    - **Each project**, at its next Claude Code session: the plugin opens a PR on the repo that refreshes the GitHub check, and Claude updates the Kit line on the project page. Merge the PR into dev, then pull dev. The PR needs `gh` logged in; without it, Claude says to run `/mg-ship-kit:setup` and commit `.github/` instead.
    - **The project page** gets any new column or line from chat itself, before its next job. It only adds.
 
-   **Once, for 0.14.0:** in each repo, run `/mg-ship-kit:setup` again on `dev` and commit what it wrote: it makes the repo's build map and its "Build map" sub-page (step 5). Chat raises the page to layout 5 by itself. **Once, for 0.13.0:** nothing to install. If a project's code lives in several repos, say "add a repo" in chat for each one you ship from, run `/mg-ship-kit:setup` in each of them on `dev`, and set the Repo of its Ready rows (step 3). **Once, for 0.7.0:** remove the old copies (item 6) and add the plugin on your account (item 5). Then in each project, open a Claude Code session and run `/mg-ship-kit:setup` once. It takes the old plugin lines out of `.claude/settings.json`, takes the kit's old rule lines out of `CLAUDE.md` (they come from the plugin now) and asks for the Kit line. Commit what it changed. Then in chat say "give me the project instructions" and paste them into the project's Claude Project (step 4, item 5). **Once, for 0.4.0:** the plugin was renamed from `ship` to `mg-ship-kit`, so an update doesn't carry it over. Run `/plugin uninstall ship@ship-kit`, then `/plugin install mg-ship-kit@ship-kit`, then `/reload-plugins`. In each project, run `/mg-ship-kit:setup` and change any `/ship:` command in its `CLAUDE.md` to `/mg-ship-kit:`; setup warns until you do.
+   **Once, for 0.15.0:** in each repo, run `/mg-ship-kit:setup` again on `dev` and commit what it wrote (the Kit line, and the CI copy, which now holds the quick lane's limits). Then `/mg-ship-kit:quick` is ready (step 7). Claude can now run `/mg-ship-kit:cto-check` and `/mg-ship-kit:quick` for you on your own words; you can still type them. **Once, for 0.14.0:** in each repo, run `/mg-ship-kit:setup` again on `dev` and commit what it wrote: it makes the repo's build map and its "Build map" sub-page (step 5). Chat raises the page to layout 5 by itself. **Once, for 0.13.0:** nothing to install. If a project's code lives in several repos, say "add a repo" in chat for each one you ship from, run `/mg-ship-kit:setup` in each of them on `dev`, and set the Repo of its Ready rows (step 3). **Once, for 0.7.0:** remove the old copies (item 6) and add the plugin on your account (item 5). Then in each project, open a Claude Code session and run `/mg-ship-kit:setup` once. It takes the old plugin lines out of `.claude/settings.json`, takes the kit's old rule lines out of `CLAUDE.md` (they come from the plugin now) and asks for the Kit line. Commit what it changed. Then in chat say "give me the project instructions" and paste them into the project's Claude Project (step 4, item 5). **Once, for 0.4.0:** the plugin was renamed from `ship` to `mg-ship-kit`, so an update doesn't carry it over. Run `/plugin uninstall ship@ship-kit`, then `/plugin install mg-ship-kit@ship-kit`, then `/reload-plugins`. In each project, run `/mg-ship-kit:setup` and change any `/ship:` command in its `CLAUDE.md` to `/mg-ship-kit:`; setup warns until you do.
 
 ## 2. Notion: the project's teamspace
 
@@ -173,6 +173,17 @@ Three roles help before a spec. Each is a way of talking, not a step: none of th
 - Rejected: `/mg-ship-kit:drop`. The code is deleted and the row becomes Dropped. Git keeps it.
 - Nearly right: for now, leave it on dev, file the change as a new request, spec and build the fix; the client then tests both. Whether a reopen joins the kit is decided after the first run.
 
+**A quick fix: one word, one label (Code tab)**
+
+- For a change you decide on yourself: a word, a label, a colour, spacing. Say it in the Code tab in your own words, or type `/mg-ship-kit:quick change "Sign in" to "Log in" on /login`. There is no spec in chat (D92).
+- Claude writes a tiny contract from your words (Size 0, your name and the date as the approval), adds a `Quick: …` row to the tracker, makes the change and runs the CTO check. On your yes it pushes to dev.
+- The script holds it to the lane, and the push gate and GitHub check it again: at most 10 lines added and 10 removed, in at most 3 files that already exist; no new, deleted or binary file; no dependency, deploy, env, SQL or migration file. Nothing in `ship.json` raises the limits. Over them, Claude trims the change to your line, or says it's too big for the quick lane and you spec it in chat.
+- The security review still runs when the script flags a file, a login page for example.
+- It waits while another piece is building or a chain is open, and gives your line back to run later. Keep a list, and run them once the piece is on dev.
+- Not for bugs. A bug the client reported is a piece with `Fixes:`, so its lesson isn't skipped (step 9). A wrong price is a bug even when it's one word.
+- You give the verdict, not the client: check it on the Dev URL, then `/mg-ship-kit:done`, or `/mg-ship-kit:drop` if it's wrong. Until then it blocks release like any piece on dev.
+- Claude starts it only on your own words, never on its own idea. A typo it notices, it tells you about and waits.
+
 **A chain: one big feature built in one run**
 
 Some features are one thing to the client and five pieces to build: a list page, a detail page, two endpoints and a table. Piece by piece, that is five specs, five pushes and five rounds of waiting. A chain does it in one run and keeps a reader where it matters.
@@ -192,6 +203,7 @@ Some features are one thing to the client and five pieces to build: a list page,
 | `/mg-ship-kit:setup` | Code tab | once per repo, on dev; again when the track changes, or when the plugin can't open its refresh PR |
 | `/mg-ship-kit:next` | Code tab | pick up the next Ready piece |
 | `/mg-ship-kit:cto-check` | Code tab | run the check and the security review, walk the way out, push to dev |
+| `/mg-ship-kit:quick` | Code tab | a one-line change in your words, with no spec; you check it on dev |
 | `/mg-ship-kit:chain` | Code tab | split a chain head, stop for your go, build the sub-pieces in one run |
 | `/mg-ship-kit:done` | Code tab | the client accepted it; rebuilds the build map |
 | `/mg-ship-kit:drop` | Code tab | the client rejected it: delete the code |
@@ -216,7 +228,6 @@ Listed so nobody expects it:
 - A problem button inside the product that files tickets.
 - The server and data checks in the pipeline. Step 8 is by hand.
 - The release-time library scan (known holes in the packages you already use). The security review looks at what each piece adds.
-- A quick lane. Today a one-line fix needs a small contract too.
 - The sales check at the contract (three people who would pay, what they'd pay, who opens the door) and research on buyers. The reuse search and market research are in (step 4, step 7 and chains).
 - The Claude Design step: a design link in the contract.
 - A setup check command. Step 6 is by hand.
