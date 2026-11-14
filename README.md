@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.22 — 13 Nov 2026.** For ship-spec 0.16.4 and the mg-ship-kit plugin 0.16.4. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.23 — 14 Nov 2026.** For ship-spec 0.16.5 and the mg-ship-kit plugin 0.16.5. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -149,7 +149,7 @@ Three roles help before a spec. Each is a way of talking, not a step: none of th
 **Pick up and build (Code tab)**
 
 - Run `/mg-ship-kit:next`. It takes the lowest-Order Ready piece of this repo whose dependencies are all On dev or Done, saves the contract to `contracts/`, marks the row Building and writes a read-only copy into the row. Only Claude Code writes that copy; a hand edit stops it.
-- To build two pieces at once (D93), open a second session with its own copy of the repo, a new cloud session or a desktop session in its own worktree, and run `/mg-ship-kit:next` there. One piece builds per session; two sessions in one folder can't both build, since the second `/mg-ship-kit:next` sees the first piece and refuses. Start them one after another: wait until the first shows its row as Building. Each extra session means one more check, review and client test for you; parallel pays only when you wait on Claude more than Claude waits on you.
+- To build two pieces at once (D93), open a second session with its own copy of the repo, a new cloud session or a desktop session in its own worktree, and run `/mg-ship-kit:next` there. One piece builds per session; two sessions in one folder can't both build, since the second `/mg-ship-kit:next` sees the first piece and refuses. You may start them at the same time: if both reach for the same row, one claims it and the other backs off and picks another. If both still build it, the second one's check stops before its push and asks you which to keep. Each extra session means one more check, review and client test for you; parallel pays only when you wait on Claude more than Claude waits on you.
 - A row specced before Depends on builds only while nothing else of its repo is building, as before; say "add the Depends on lines" in chat to change that.
 - Claude builds what the contract lists and nothing more. You read the one screen, not the plan.
 - A change the client asks for mid-build is a contract change: you approve it in one line. Claude never edits a contract on its own.
