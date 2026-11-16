@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.26 — 16 Nov 2026.** For ship-spec 0.17.1 and the mg-ship-kit plugin 0.17.1. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.27 — 16 Nov 2026.** For ship-spec 0.17.2 and the mg-ship-kit plugin 0.17.2. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -148,7 +148,7 @@ Three roles help before a spec. Each is a way of talking, not a step: none of th
 
 **Pick up and build (Code tab)**
 
-- Run `/mg-ship-kit:next`. It takes the lowest-Order Ready piece of this repo whose dependencies are all On dev or Done, saves the contract to `contracts/`, marks the row Building and writes a read-only copy into the row. Only Claude Code writes that copy; a hand edit stops it.
+- Run `/mg-ship-kit:next`. It takes the lowest-Order Ready piece of this repo whose dependencies are all On dev or Done, saves the contract to `contracts/`, marks the row Building and writes a read-only copy into the row. Only Claude Code writes that copy; a hand edit stops it. Then it builds the piece and runs the CTO check (below) in the same run, with no stop between.
 - To build two pieces at once (D93), open a second session with its own copy of the repo, a new cloud session or a desktop session in its own worktree, and run `/mg-ship-kit:next` there. One piece builds per session; two sessions in one folder can't both build, since the second `/mg-ship-kit:next` sees the first piece and refuses. You may start them at the same time: if both reach for the same row, one claims it and the other backs off and picks another. If both still build it, the CTO check of the one that lost stops before its push and asks you which to keep. Each extra session means one more check, review and client test for you; parallel pays only when you wait on Claude more than Claude waits on you.
 - A row specced before Depends on builds only while nothing else of its repo is building, as before; say "add the Depends on lines" in chat to change that.
 - Claude builds what the contract lists and nothing more. You read the one screen, not the plan.
@@ -156,7 +156,7 @@ Three roles help before a spec. Each is a way of talking, not a step: none of th
 
 **Check (Code tab)**
 
-- Run `/mg-ship-kit:cto-check`. Three checks: Size (what got built against the list), Stack (a package or import outside the list), Leftovers (unused code on the lines the piece added, found by vulture and knip). A failed check stops the piece.
+- `/mg-ship-kit:next` runs the check by itself once the piece is built. Run `/mg-ship-kit:cto-check` yourself only to rerun it or to finish a piece. Three checks: Size (what got built against the list), Stack (a package or import outside the list), Leftovers (unused code on the lines the piece added, found by vulture and knip). A failed check stops the piece.
 - The way out. An extra the client asked for: you approve a contract change in one line. An extra nobody asked for: Claude deletes it. A new package: you approve it in one line, or Claude removes it. Leftovers: Claude deletes them. Then the check runs again.
 - On a pass, the same command runs the security review (D66). The script, not Claude, decides whether the piece touches risky ground: routes, the database, login and permissions, uploads, config and env, or a new package. A piece that doesn't gets a skip note. One that does is read by a reviewer agent that sees the diff, the contract and the repo, but never Claude's plan or chat; then a checker agent tries to prove each finding with a test. Only a proven finding counts.
 - A proven critical or major finding stops the piece. The way out: Claude fixes it until its test passes (the test stays in the repo), or you waive it in one line with your reason. Claude never waives one. The result lands in `contracts/reviews/` and on the tracker row's Security column, for example "2 found, 1 fixed, 1 waived".
