@@ -2,7 +2,7 @@
 
 *This is the public copy of the guide. It is published from the private kit repo on every release, so changes made here are overwritten.*
 
-**v0.1.25 — 16 Nov 2026.** For ship-spec 0.17.0 and the mg-ship-kit plugin 0.17.0. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
+**v0.1.26 — 16 Nov 2026.** For ship-spec 0.17.1 and the mg-ship-kit plugin 0.17.1. The deploy parts (the end of step 5, step 8 and the track chapters) stay thin until the first runs on each track and get rewritten from what they teach. Where this guide and the kit disagree, the kit is right. English is the master; [README.ru.md](README.ru.md) is the Russian edition, made from each English release. This guide describes the kit and never copies its files: for exact columns and commands, follow the links.
 
 New here? Open a new Claude chat, paste this page's link, and ask it to walk you through steps 1 to 6.
 
@@ -181,7 +181,7 @@ Three roles help before a spec. Each is a way of talking, not a step: none of th
 
 - For a change you decide on yourself: a word, a label, a colour, spacing. Say it in the Code tab in your own words, or type `/mg-ship-kit:quick change "Sign in" to "Log in" on /login`. There is no spec in chat (D92).
 - Claude writes a tiny contract from your words (Size 0, your name and the date as the approval), adds a `Quick: …` row to the tracker, makes the change and runs the CTO check. On your yes it pushes to dev.
-- The script holds it to the lane, and the push gate and GitHub check it again: at most 10 lines added and 10 removed, in at most 3 files that already exist; no new, deleted or binary file; no dependency, deploy, env, SQL or migration file. Nothing in `ship.json` raises the limits. Over them, Claude trims the change to your line, or says it's too big for the quick lane and you spec it in chat.
+- The script holds it to the lane, and the push gate and GitHub check it again: at most 10 lines added and 10 removed, in at most 3 files that already exist; no new, deleted or binary file; no dependency, deploy, CI workflow, env, SQL or migration file. Nothing in `ship.json` raises the limits. Over them, Claude trims the change to your line, or says it's too big for the quick lane and you spec it in chat.
 - The security review still runs when the script flags a file, a login page for example.
 - It waits while another piece is building or a chain is open, and gives your line back to run later. Keep a list, and run them once the piece is on dev.
 - Not for bugs. A bug the client reported is a piece with `Fixes:`, so its lesson isn't skipped (step 9). A wrong price is a bug even when it's one word.
